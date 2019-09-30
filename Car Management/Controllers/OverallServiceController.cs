@@ -6,6 +6,7 @@ using Car_Management.Data;
 using Car_Management.Model;
 using Car_Management.Repository;
 using Car_Management.Services;
+using Car_Management.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,10 @@ namespace Car_Management.Controllers
             _overallservice = overallservice;
             _context = context;
         }
+		
 
         [HttpPost]
-        [Route("Addservice")]
+        [Route("AddOverallservice")]
         public IActionResult post([FromBody] OverallService overallservice)
         {
             if (!ModelState.IsValid)

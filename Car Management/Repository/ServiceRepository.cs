@@ -1,5 +1,7 @@
 ﻿using Car_Management.Data;
 using Car_Management.Model;
+using Car_Management.ViewModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,23 +18,23 @@ namespace Car_Management.Repository
             _context = context;
         }
 
-        public void Create(Service newService)
+        public OverallService Create(OverallServiceViewModel viewModel)
         {
-            _context.Set<Service>().AddAsync(newService);
-            _context.SaveChangesAsync();
+			return _context.Set<OverallService>().SingleOrDefault(b => b.OverallServiceId == viewModel.OverallServiceId);
+            
         }
 
-        public void Delete(int? id, Service newService)
+        public void Delete( Service newService)
         {
             {
-                var entity = _context.Set<Service>().Find(id);
-                _context.Set<Service>().Remove(entity);
+                
+                _context.Set<Service>().Remove(newService);
                 _context.SaveChanges();
             }
         }
         public Service GetBy(int? id)
         {
-            return _context.Services.FirstOrDefault(service => service.ServiceId == id);
+            return _context.Services.FirstOrDefault(service => service.Id == id);
         }
 
         public IEnumerable<Service> GetAll()
@@ -44,26 +46,38 @@ namespace Car_Management.Repository
         {
             return _context.Services.Where(a => a.Name == name);
         }
-
+		public OverallService GetOverallServiceById(int OverallServiceId)
+		{
+			return _context.Overall.SingleOrDefault<OverallService>(service => service.OverallServiceId == OverallServiceId);
+		}
         public IEnumerable<Service> GetByDescription(string description)
         {
             return _context.Services.Where(a => a.Description == description);
         }
 
-        public IEnumerable<Service> GetBySerialNo(string serialno)
-        {
-            return _context.Services.Where(a => a.SerialNo == serialno);
-        }
+      
 
         //public Service GetByDate(DateTime Datetime);
 
 
-        public void Update(int? id, Service newService)
+        public void Update( Service newService)
         {
-            var entity = _context.Set<Service>().Find(id);
-            _context.Set<Service>().Update(entity);
+           
+            _context.Set<Service>().Update(newService);
             _context.SaveChanges();
         }
-    }
+
+		public void Add(Service service)
+		{
+			_context.Set<Service>().AddAsync(service);
+			_context.SaveChanges();
+		}
+
+		public Service GetServiceById(int id)
+		{
+			var query = _context.Set<Service>().Where(x => x.Id == id).FirstOrDefault();
+			return query;
+		}
+	}
 }
     

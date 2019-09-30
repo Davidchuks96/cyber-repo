@@ -10,7 +10,7 @@ namespace Car_Management.Model
     public class Service
     {
         [Key]
-        public int ServiceId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -22,6 +22,9 @@ namespace Car_Management.Model
         [Required]
         public DateTime NextDateOfService { get; set; }
 
+		public int OverallServiceId { get; set; }
 
-    }
+
+
+	}
 }

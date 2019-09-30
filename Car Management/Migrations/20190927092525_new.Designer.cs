@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Car_Management.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190923134133_IndividualService")]
-    partial class IndividualService
+    [Migration("20190927092525_new")]
+    partial class @new
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,28 +74,24 @@ namespace Car_Management.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Car_Management.Model.IndividualService", b =>
+            modelBuilder.Entity("Car_Management.Model.OverallService", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OverallServiceId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("ServiceId");
+                    b.Property<DateTime>("Time");
 
-                    b.Property<DateTime>("dateTime");
+                    b.HasKey("OverallServiceId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("individualServices");
+                    b.ToTable("Overall");
                 });
 
             modelBuilder.Entity("Car_Management.Model.Service", b =>
                 {
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -107,28 +103,37 @@ namespace Car_Management.Migrations
 
                     b.Property<DateTime>("NextDateOfService");
 
+                    b.Property<int>("OverallServiceId");
+
                     b.Property<DateTime>("RecentDateOfService");
 
                     b.Property<string>("SerialNo")
                         .IsRequired();
 
-                    b.HasKey("ServiceId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Service");
+                    b.HasIndex("OverallServiceId");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Car_Management.Model.Vehicle", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("VehicleId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
+                    b.Property<DateTime>("HackneyExpirationDate");
+
+                    b.Property<DateTime>("HackneyPermitIssuedDate");
 
                     b.Property<bool>("IsActive");
 
                     b.Property<bool>("IsVerified");
+
+                    b.Property<DateTime>("IssuranceExpirationDate");
+
+                    b.Property<DateTime>("IssuranceIssuedDate");
 
                     b.Property<string>("Officers")
                         .IsRequired();
@@ -136,16 +141,24 @@ namespace Car_Management.Migrations
                     b.Property<string>("RegNo")
                         .IsRequired();
 
+                    b.Property<DateTime>("RoadWorthinessExpirationDate");
+
+                    b.Property<DateTime>("RoadWorthinessIssuedDate");
+
+                    b.Property<int>("Status");
+
+                    b.Property<DateTime>("VehicleLicenseExpirationDate");
+
+                    b.Property<DateTime>("VehicleLicenseIssuedDate");
+
                     b.Property<string>("VehicleName")
                         .IsRequired();
 
                     b.Property<int>("VehicleType");
 
-                    b.HasKey("Id");
+                    b.HasKey("VehicleId");
 
                     b.ToTable("Vehicles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Vehicle");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -258,61 +271,11 @@ namespace Car_Management.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Car_Management.Model.HackneyPermit", b =>
+            modelBuilder.Entity("Car_Management.Model.Service", b =>
                 {
-                    b.HasBaseType("Car_Management.Model.Vehicle");
-
-                    b.Property<DateTime>("ExpirationDate");
-
-                    b.Property<DateTime>("IssuedDate");
-
-                    b.HasDiscriminator().HasValue("HackneyPermit");
-                });
-
-            modelBuilder.Entity("Car_Management.Model.Issurance", b =>
-                {
-                    b.HasBaseType("Car_Management.Model.Vehicle");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnName("Issurance_ExpirationDate");
-
-                    b.Property<DateTime>("IssuedDate")
-                        .HasColumnName("Issurance_IssuedDate");
-
-                    b.HasDiscriminator().HasValue("Issurance");
-                });
-
-            modelBuilder.Entity("Car_Management.Model.RoadWorthiness", b =>
-                {
-                    b.HasBaseType("Car_Management.Model.Vehicle");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnName("RoadWorthiness_ExpirationDate");
-
-                    b.Property<DateTime>("IssuedDate")
-                        .HasColumnName("RoadWorthiness_IssuedDate");
-
-                    b.HasDiscriminator().HasValue("RoadWorthiness");
-                });
-
-            modelBuilder.Entity("Car_Management.Model.VehicleLicense", b =>
-                {
-                    b.HasBaseType("Car_Management.Model.Vehicle");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnName("VehicleLicense_ExpirationDate");
-
-                    b.Property<DateTime>("IssuedDate")
-                        .HasColumnName("VehicleLicense_IssuedDate");
-
-                    b.HasDiscriminator().HasValue("VehicleLicense");
-                });
-
-            modelBuilder.Entity("Car_Management.Model.IndividualService", b =>
-                {
-                    b.HasOne("Car_Management.Model.Service", "service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId")
+                    b.HasOne("Car_Management.Model.OverallService")
+                        .WithMany("services")
+                        .HasForeignKey("OverallServiceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -10,15 +10,13 @@ namespace Car_Management.Model
     public class OverallService
     {
         [Key]
-        public int OverallId { get; set; }
+        public int OverallServiceId { get; set; }
 
         public string  Name { get; set; }
 
         public DateTime Time { get; set; }
 
-        [ForeignKey("Service")]
-        public int ServiceId { get; set; }
+		public IEnumerable<Service> services { get; set; }
 
-        public Service service { get; set; }
-    }
+	}
 }
